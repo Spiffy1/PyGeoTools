@@ -66,13 +66,14 @@ class GeoLocation:
         Computes the great circle distance between this GeoLocation instance
         and the other.
         '''
-        return radius * math.acos(
-                math.sin(self.rad_lat) * math.sin(other.rad_lat) +
-                math.cos(self.rad_lat) * 
-                math.cos(other.rad_lat) * 
-                math.cos(self.rad_lon - other.rad_lon)
-            )
-            
+        la1 = self.rad_lat
+        la2 = other.rad_lat
+        lo1 = self.rad_lon
+        lo2 = other.rad_lon
+        r = radius * 1000  # Earth radius in METERS
+        h = math.sin(la2 - la1) + math.cos(la1) * math.cos(la2) * math.sin(lo2 - lo1)
+        return 2 * r * math.asin(math.sqrt(h)) / 100
+           
     def bounding_locations(self, distance, radius=EARTH_RADIUS):
         '''
         Computes the bounding coordinates of all points on the surface
